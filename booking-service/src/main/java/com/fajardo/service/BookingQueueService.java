@@ -3,6 +3,7 @@ package com.fajardo.service;
 import com.fajardo.model.Booking;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -15,19 +16,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class BookingQueueService {
 
     private final BookingProducerService bookingProducerService;
-    private final BlockingQueue<Booking> bookingsQueue = new LinkedBlockingQueue();
+    private final BlockingQueue<Booking> bookingsQueue = new LinkedBlockingQueue<>();
 
-    private final Thread bookingWorker1;
-    private final Thread bookingWorker2;
 
-    public BookingQueueService(@Autowired BookingProducerService bookingProducerService) {
+    public BookingQueueService(
+            @Autowired BookingProducerService bookingProducerService,
+            @Value("${booking-queue-service.workers:2}") int numberOfWorkers) {
         this.bookingProducerService = bookingProducerService;
 
-        bookingWorker1 = new Thread(new BookingRunnable());
-        bookingWorker2 = new Thread(new BookingRunnable());
-
-        bookingWorker1.start();
-        bookingWorker2.start();
+        Thread[] workers = new Thread[numberOfWorkers];
+        for (int i = 0; i < workers.length; i++) {
+            workers[i] = new Thread(new BookingRunnable());
+            workers[i].start();
+        }
     }
 
     public boolean addBooking(Booking booking) {
