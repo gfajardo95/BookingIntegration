@@ -18,7 +18,7 @@ This functionality is implemented in the `BookingQueueService`, which is depicte
 
 The following is pending development:
 
-- save failed booking calls to a retry table (and nightly cron job)
 - MySQL database for users, payments, bookings, and listings (integrated with Write API)
-- Redis reflection of the above data (integrated with Read API)
-- an adapter between MySQL and Redis that updates Redis when changes are made to the MySQL database
+- Redis sets and hashes, involving above data, that support the required queries (integrated with Read API)
+- replication service between MySQL and Redis that updates Redis in real-time when changes are made to the MySQL database
+- save failed booking calls to a retry table (and nightly cron job)
