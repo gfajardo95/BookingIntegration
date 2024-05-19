@@ -44,7 +44,7 @@ public class BookingBrokerService {
         BookingDecision bookingDecision = new BookingDecision(bookingSignal, null);
         bookingDecisions.put(bookingKey, bookingDecision);
 
-        synchronized (bookingSignal) {
+        synchronized (bookingSignal) {  // todo: don't wait indefinitely
             try {
                 bookingSignal.wait();
             } catch (InterruptedException e) {
@@ -53,6 +53,7 @@ public class BookingBrokerService {
         }
 
         ConsumerRecord<String, String> response = bookingDecisions.get(bookingKey).getBookingDecision();
+        bookingDecisions.remove(bookingKey);
         // todo: process response
 
         return true;
