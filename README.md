@@ -33,10 +33,11 @@ bookingDecisions map above. After it adds the object, it calls the wait() method
 
 When the receiver gets a new message, remember that each message comes in with a key associated with it. This key is 
 used to search into the `bookingDecisions` map and retrieve the corresponding object. The message is assigned to the 
-decision parameter. Then, the notify() method is called, which wakes up the process that called wait() on this signal.
+decision parameter. Then, the notify() method is called on the signal param, which wakes up the process that called 
+wait() on this signal.
 
-When the process wakes up, it now finds the decision data in the map. So now, it can process the decision and return the 
-decision back to the client (whether the booking is successful or not).
+When the waiting process "wakes up", it now finds the decision data in the map. So now, it can process the decision and 
+return the decision back to the client (whether the booking is successful or not).
 
 The following is pending development:
 
